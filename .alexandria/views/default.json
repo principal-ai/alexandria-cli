@@ -1,0 +1,23 @@
+{
+  "id": "default",
+  "version": "1.0.0",
+  "name": "Alexandria CLI Documentation",
+  "description": "Main documentation for the Alexandria CLI tool - unified context management for AI agents",
+  "rows": 1,
+  "cols": 1,
+  "referenceGroups": {},
+  "overviewPath": "README.md",
+  "category": "other",
+  "displayOrder": 0,
+  "timestamp": "2025-10-09T19:26:13.585Z",
+  "metadata": {
+    "generationType": "user",
+    "ui": {
+      "enabled": true,
+      "rows": 1,
+      "cols": 1,
+      "showCellLabels": true,
+      "cellLabelPosition": "top"
+    }
+  }
+}

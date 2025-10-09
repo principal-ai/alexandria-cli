@@ -1,0 +1,54 @@
+{
+  "id": "command-development-guide",
+  "version": "1.0.0",
+  "name": "Command Development Guide",
+  "description": "How to create, modify, and test Alexandria CLI commands",
+  "rows": 2,
+  "cols": 3,
+  "referenceGroups": {
+    "Command Structure": {
+      "coordinates": [0, 0],
+      "files": ["src/index.ts", "src/commands/init.ts", "src/commands/add-doc.ts"],
+      "priority": 0
+    },
+    "Common Utilities": {
+      "coordinates": [0, 1],
+      "files": ["src/utils/repository.ts", "src/utils/validation.ts", "src/utils/formatting.ts"],
+      "priority": 0
+    },
+    "Example Commands": {
+      "coordinates": [0, 2],
+      "files": ["src/commands/coverage.ts", "src/commands/lint.ts", "src/commands/list.ts"],
+      "priority": 0
+    },
+    "Build & Config": {
+      "coordinates": [1, 0],
+      "files": ["package.json", "tsconfig.json", "tsconfig.build.json", "eslint.config.js"],
+      "priority": 0
+    },
+    "Development Tools": {
+      "coordinates": [1, 1],
+      "files": [".prettierrc", ".lintstagedrc.json"],
+      "priority": 0
+    },
+    "Advanced Commands": {
+      "coordinates": [1, 2],
+      "files": ["src/commands/projects.ts", "src/commands/outpost.ts", "src/api/AlexandriaOutpostManager.ts"],
+      "priority": 0
+    }
+  },
+  "overviewPath": "docs/command-development.md",
+  "category": "other",
+  "displayOrder": 0,
+  "timestamp": "2025-10-09T21:25:57.009Z",
+  "metadata": {
+    "generationType": "user",
+    "ui": {
+      "enabled": true,
+      "rows": 2,
+      "cols": 3,
+      "showCellLabels": true,
+      "cellLabelPosition": "top"
+    }
+  }
+}

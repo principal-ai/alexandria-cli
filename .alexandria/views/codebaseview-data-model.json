@@ -1,0 +1,59 @@
+{
+  "id": "codebaseview-data-model",
+  "version": "1.0.0",
+  "name": "CodebaseView Data Model",
+  "description": "Deep dive into CodebaseView structure, validation, and best practices",
+  "rows": 2,
+  "cols": 3,
+  "referenceGroups": {
+    "View Creation": {
+      "coordinates": [0, 0],
+      "files": [
+        "src/utils/viewCreation.ts",
+        "src/utils/documentParser.ts",
+        "src/commands/add-doc.ts",
+        "src/commands/save.ts"
+      ],
+      "priority": 0
+    },
+    "Validation": {
+      "coordinates": [0, 1],
+      "files": ["src/utils/validation.ts", "src/commands/validate.ts", "src/commands/validate-all.ts"],
+      "priority": 0
+    },
+    "Lint Rules": {
+      "coordinates": [0, 2],
+      "files": ["src/commands/lint.ts", ".alexandriarc.json"],
+      "priority": 0
+    },
+    "Schema & Config": {
+      "coordinates": [1, 0],
+      "files": ["schema/alexandriarc.json", "src/commands/schema.ts"],
+      "priority": 0
+    },
+    "Coverage": {
+      "coordinates": [1, 1],
+      "files": ["src/utils/coverage.ts", "src/commands/coverage.ts"],
+      "priority": 0
+    },
+    "View Management": {
+      "coordinates": [1, 2],
+      "files": ["src/commands/list.ts", "src/commands/add-all-docs.ts", "src/commands/list-untracked-docs.ts"],
+      "priority": 0
+    }
+  },
+  "overviewPath": "docs/codebase-view-model.md",
+  "category": "other",
+  "displayOrder": 0,
+  "timestamp": "2025-10-09T21:25:55.686Z",
+  "metadata": {
+    "generationType": "user",
+    "ui": {
+      "enabled": true,
+      "rows": 2,
+      "cols": 3,
+      "showCellLabels": true,
+      "cellLabelPosition": "top"
+    }
+  }
+}

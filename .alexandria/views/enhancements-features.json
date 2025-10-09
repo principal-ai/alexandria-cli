@@ -1,0 +1,23 @@
+{
+  "id": "enhancements-features",
+  "version": "1.0.0",
+  "name": "Enhancements & Features",
+  "description": "Planned enhancements and feature improvements for Alexandria CLI",
+  "rows": 1,
+  "cols": 1,
+  "referenceGroups": {},
+  "overviewPath": "docs/enhancements.md",
+  "category": "other",
+  "displayOrder": 0,
+  "timestamp": "2025-10-09T19:27:09.485Z",
+  "metadata": {
+    "generationType": "user",
+    "ui": {
+      "enabled": true,
+      "rows": 1,
+      "cols": 1,
+      "showCellLabels": true,
+      "cellLabelPosition": "top"
+    }
+  }
+}

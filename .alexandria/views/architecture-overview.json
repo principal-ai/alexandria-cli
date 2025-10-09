@@ -1,0 +1,83 @@
+{
+  "id": "architecture-overview",
+  "version": "1.0.0",
+  "name": "Architecture Overview",
+  "description": "System architecture, components, and design patterns",
+  "rows": 3,
+  "cols": 3,
+  "referenceGroups": {
+    "CLI Entry & Commands": {
+      "coordinates": [0, 0],
+      "files": ["src/index.ts", "package.json"],
+      "priority": 0
+    },
+    "Core Commands": {
+      "coordinates": [0, 1],
+      "files": ["src/commands/init.ts", "src/commands/add-doc.ts", "src/commands/list.ts", "src/commands/save.ts"],
+      "priority": 0
+    },
+    "Validation & Lint": {
+      "coordinates": [0, 2],
+      "files": ["src/commands/validate.ts", "src/commands/validate-all.ts", "src/commands/lint.ts"],
+      "priority": 0
+    },
+    "Utilities": {
+      "coordinates": [1, 0],
+      "files": [
+        "src/utils/repository.ts",
+        "src/utils/validation.ts",
+        "src/utils/documentParser.ts",
+        "src/utils/viewCreation.ts"
+      ],
+      "priority": 0
+    },
+    "Coverage & Metrics": {
+      "coordinates": [1, 1],
+      "files": ["src/utils/coverage.ts", "src/utils/formatting.ts", "src/commands/coverage.ts"],
+      "priority": 0
+    },
+    "Git & Config": {
+      "coordinates": [1, 2],
+      "files": ["src/utils/git.ts", "src/commands/schema.ts", "schema/alexandriarc.json"],
+      "priority": 0
+    },
+    "Management Commands": {
+      "coordinates": [2, 0],
+      "files": [
+        "src/commands/agents.ts",
+        "src/commands/hooks.ts",
+        "src/commands/projects.ts",
+        "src/commands/update.ts"
+      ],
+      "priority": 0
+    },
+    "API & Templates": {
+      "coordinates": [2, 1],
+      "files": [
+        "src/api/AlexandriaOutpostManager.ts",
+        "src/commands/outpost.ts",
+        "src/templates/alexandria-workflow.ts"
+      ],
+      "priority": 0
+    },
+    "Status & Workflows": {
+      "coordinates": [2, 2],
+      "files": ["src/commands/status.ts", "src/commands/install-workflow.ts", "src/commands/fix-overview-paths.ts"],
+      "priority": 0
+    }
+  },
+  "overviewPath": "docs/architecture.md",
+  "category": "other",
+  "displayOrder": 0,
+  "timestamp": "2025-10-09T21:25:54.370Z",
+  "metadata": {
+    "generationType": "user",
+    "ui": {
+      "enabled": true,
+      "rows": 3,
+      "cols": 3,
+      "showCellLabels": true,
+      "cellLabelPosition": "top"
+    }
+  }
+}
