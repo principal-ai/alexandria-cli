@@ -10,6 +10,8 @@ import {
 import chalk from 'chalk';
 import * as fs from 'fs';
 import * as path from 'path';
+import { validateAllViews } from '../utils/validation.js';
+import { formatValidationSummary } from '../utils/formatting.js';
 
 function getBasicLintConfig() {
   return {
@@ -283,6 +285,47 @@ export const lintCommand = new Command('lint')
       }
     }
 
+    // Validate CodebaseViews
+    console.log(chalk.blue('📋 Validating CodebaseViews...\n'));
+    let viewValidationSummary;
+    try {
+      viewValidationSummary = validateAllViews(process.cwd());
+
+      if (viewValidationSummary.totalViews === 0) {
+        console.log(chalk.dim('   No CodebaseViews found to validate.\n'));
+      } else {
+        // Show view validation results
+        const hasViewIssues = viewValidationSummary.invalidViews > 0 || viewValidationSummary.totalIssues > 0;
+
+        if (hasViewIssues) {
+          console.log(chalk.yellow(`   Found issues in ${viewValidationSummary.invalidViews} view(s):\n`));
+
+          // Show results for views with issues
+          viewValidationSummary.results
+            .filter((r) => !r.success || r.validationResult.issues.length > 0)
+            .forEach((result) => {
+              if (result.error) {
+                console.log(chalk.red(`   ❌ ${result.viewName} (${result.viewId}): ${result.error}`));
+              } else {
+                const summaryText = formatValidationSummary(result.validationResult);
+                const icon = result.success ? '⚠️ ' : '❌';
+                console.log(`   ${icon} ${result.viewName} (${result.viewId}): ${summaryText}`);
+              }
+            });
+          console.log();
+        } else {
+          console.log(chalk.green(`   ✅ All ${viewValidationSummary.totalViews} CodebaseView(s) valid\n`));
+        }
+      }
+    } catch (error) {
+      console.log(
+        chalk.yellow(
+          `   ⚠️  Could not validate CodebaseViews: ${error instanceof Error ? error.message : String(error)}\n`,
+        ),
+      );
+      // Continue with linting even if view validation fails
+    }
+
     const result = await engine.lint(process.cwd(), {
       enabledRules: options.enable,
       disabledRules: options.disable,
@@ -290,8 +333,30 @@ export const lintCommand = new Command('lint')
     });
 
     if (options.json) {
-      console.log(JSON.stringify(result, null, 2));
-      const exitCode = options.errorsOnly ? (result.errorCount > 0 ? 1 : 0) : result.violations.length > 0 ? 1 : 0;
+      const jsonOutput = {
+        lintResults: result,
+        viewValidation: viewValidationSummary
+          ? {
+              totalViews: viewValidationSummary.totalViews,
+              validViews: viewValidationSummary.validViews,
+              invalidViews: viewValidationSummary.invalidViews,
+              totalIssues: viewValidationSummary.totalIssues,
+              errorCount: viewValidationSummary.errorCount,
+              warningCount: viewValidationSummary.warningCount,
+              infoCount: viewValidationSummary.infoCount,
+            }
+          : null,
+      };
+      console.log(JSON.stringify(jsonOutput, null, 2));
+
+      const hasViewErrors = viewValidationSummary && viewValidationSummary.invalidViews > 0;
+      const exitCode = options.errorsOnly
+        ? result.errorCount > 0 || hasViewErrors
+          ? 1
+          : 0
+        : result.violations.length > 0 || hasViewErrors
+          ? 1
+          : 0;
       process.exit(exitCode);
     }
 
@@ -371,7 +436,14 @@ export const lintCommand = new Command('lint')
       );
     }
 
-    // Determine exit code based on options
-    const exitCode = options.errorsOnly ? (errorCount > 0 ? 1 : 0) : violations.length > 0 ? 1 : 0;
+    // Determine exit code based on options (include view validation errors)
+    const hasViewErrors = viewValidationSummary && viewValidationSummary.invalidViews > 0;
+    const exitCode = options.errorsOnly
+      ? errorCount > 0 || hasViewErrors
+        ? 1
+        : 0
+      : violations.length > 0 || hasViewErrors
+        ? 1
+        : 0;
     process.exit(exitCode);
   });
