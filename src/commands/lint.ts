@@ -83,6 +83,16 @@ function getAdvancedLintConfig() {
             maxAgeDays: 30,
           },
         },
+        {
+          id: 'codebase-coverage',
+          severity: 'warning',
+          enabled: true,
+          options: {
+            minimumCoverage: 70,
+            includePatterns: ['**/*.ts', '**/*.js', '**/*.tsx', '**/*.jsx'],
+            excludePatterns: ['**/*.test.ts', '**/*.spec.ts', '**/node_modules/**'],
+          },
+        },
       ],
     },
   };
@@ -142,6 +152,17 @@ function getExampleConfigForRule(ruleId: string, rule: LibraryRule) {
       break;
     case 'orphaned-references':
       // This rule typically doesn't have configurable options
+      break;
+    case 'codebase-coverage':
+      if (baseConfig.context.rules[0]) {
+        baseConfig.context.rules[0].options = {
+          minimumCoverage: 70,
+          includePatterns: ['**/*.ts', '**/*.js', '**/*.tsx', '**/*.jsx'],
+          excludePatterns: ['**/*.test.ts', '**/*.spec.ts', '**/node_modules/**', '**/dist/**'],
+          reportByDirectory: false,
+          minimumDirectoryCoverage: 50,
+        };
+      }
       break;
   }
 
