@@ -24,6 +24,9 @@ describe('CLI - list-untracked-docs command', () => {
     // Create a temporary directory
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cli-test-'));
 
+    // Set ALEXANDRIA_HOME to temp directory to isolate registry
+    process.env.ALEXANDRIA_HOME = tempDir;
+
     // Initialize it as a git repo
     execSync('git init', { cwd: tempDir });
 
@@ -38,6 +41,9 @@ describe('CLI - list-untracked-docs command', () => {
   afterEach(() => {
     // Restore original cwd
     process.chdir(originalCwd);
+
+    // Clean up environment variable
+    delete process.env.ALEXANDRIA_HOME;
 
     // Clean up temp directory
     fs.rmSync(tempDir, { recursive: true, force: true });

@@ -14,6 +14,7 @@ import { getAlexandriaWorkflowTemplate } from '../templates/alexandria-workflow.
 import { getGitRemoteUrl } from '../utils/git.js';
 import { ALEXANDRIA_DIRS } from '@a24z/core-library';
 import { execSync } from 'node:child_process';
+import { getAlexandriaHome } from '../utils/env.js';
 
 function prompt(question: string): Promise<string> {
   const rl = readline.createInterface({
@@ -84,7 +85,7 @@ export function createInitCommand(): Command {
         // Setup global registry if not opted out
         if (options.register !== false) {
           const fsAdapter = new NodeFileSystemAdapter();
-          const homeDir = process.env.HOME || process.env.USERPROFILE;
+          const homeDir = getAlexandriaHome();
 
           if (!homeDir) {
             console.warn('⚠️  Could not determine home directory for global registry');

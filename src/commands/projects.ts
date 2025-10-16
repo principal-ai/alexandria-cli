@@ -6,6 +6,7 @@ import { ProjectRegistryStore } from '@a24z/core-library';
 import { MemoryPalace } from '@a24z/core-library';
 import { hasAlexandriaWorkflow, hasMemoryNotes } from '@a24z/core-library';
 import { getGitRemoteUrl } from '../utils/git.js';
+import { getAlexandriaHome } from '../utils/env.js';
 
 export function createProjectsCommand(): Command {
   const projectsCommand = new Command('projects').description('Manage your project registry');
@@ -19,7 +20,7 @@ export function createProjectsCommand(): Command {
     .action(async (name?: string, options?: { path?: string }) => {
       try {
         const fsAdapter = new NodeFileSystemAdapter();
-        const homeDir = process.env.HOME || process.env.USERPROFILE;
+        const homeDir = getAlexandriaHome();
         if (!homeDir) {
           console.error('❌ Could not determine home directory');
           process.exit(1);
@@ -59,7 +60,7 @@ export function createProjectsCommand(): Command {
     .action(async (options?: { json?: boolean }) => {
       try {
         const fsAdapter = new NodeFileSystemAdapter();
-        const homeDir = process.env.HOME || process.env.USERPROFILE;
+        const homeDir = getAlexandriaHome();
         if (!homeDir) {
           console.error('❌ Could not determine home directory');
           process.exit(1);
@@ -128,7 +129,7 @@ export function createProjectsCommand(): Command {
     .action(async (name: string) => {
       try {
         const fsAdapter = new NodeFileSystemAdapter();
-        const homeDir = process.env.HOME || process.env.USERPROFILE;
+        const homeDir = getAlexandriaHome();
         if (!homeDir) {
           console.error('echo "Error: Could not determine home directory" >&2; false');
           process.exit(1);
@@ -158,7 +159,7 @@ export function createProjectsCommand(): Command {
     .action(async (name: string) => {
       try {
         const fsAdapter = new NodeFileSystemAdapter();
-        const homeDir = process.env.HOME || process.env.USERPROFILE;
+        const homeDir = getAlexandriaHome();
         if (!homeDir) {
           console.error('❌ Could not determine home directory');
           process.exit(1);
