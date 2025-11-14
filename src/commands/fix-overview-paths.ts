@@ -5,7 +5,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { createMemoryPalace, getRepositoryRoot } from '../utils/repository.js';
-import { OverviewPathAutoFix } from '@a24z/core-library';
+import { OverviewPathAutoFix } from '@principal-ai/alexandria-core-library';
 
 export function createFixOverviewPathsCommand(): Command {
   const command = new Command('fix-overview-paths');

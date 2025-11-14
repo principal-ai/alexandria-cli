@@ -6,12 +6,12 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { globby } from 'globby';
 import ignore from 'ignore';
-import { MemoryPalace } from '@a24z/core-library';
-import { NodeFileSystemAdapter } from '@a24z/core-library';
-import { ALEXANDRIA_DIRS } from '@a24z/core-library';
-import { generateViewIdFromName } from '@a24z/core-library';
+import { MemoryPalace } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library';
+import { ALEXANDRIA_DIRS } from '@principal-ai/alexandria-core-library';
+import { generateViewIdFromName } from '@principal-ai/alexandria-core-library';
 import { extractStructureFromMarkdown } from './documentParser.js';
-import type { CodebaseView, ValidatedRepositoryPath } from '@a24z/core-library';
+import type { CodebaseView, ValidatedRepositoryPath } from '@principal-ai/alexandria-core-library';
 
 export interface UntrackedDocumentInfo {
   filePath: string;

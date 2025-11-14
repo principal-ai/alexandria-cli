@@ -6,7 +6,7 @@ import {
   ConfigValidator,
   CONFIG_FILENAME,
   type LibraryRule,
-} from '@a24z/core-library';
+} from '@principal-ai/alexandria-core-library';
 import chalk from 'chalk';
 import * as fs from 'fs';
 import * as path from 'path';

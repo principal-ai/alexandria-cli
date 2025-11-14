@@ -6,7 +6,7 @@ import { Command } from 'commander';
 import { getRepositoryRoot } from '../utils/repository.js';
 import { formatValidationResult, formatValidationSummary } from '../utils/formatting.js';
 import { validateAllViews, validateSpecificViews, getViewsByStatus } from '../utils/validation.js';
-import { ALEXANDRIA_DIRS } from '@a24z/core-library';
+import { ALEXANDRIA_DIRS } from '@principal-ai/alexandria-core-library';
 
 export function createValidateAllCommand(): Command {
   const command = new Command('validate-all');

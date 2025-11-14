@@ -6,13 +6,13 @@ import { Command } from 'commander';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as readline from 'node:readline';
-import { CONFIG_FILENAME } from '@a24z/core-library';
-import { NodeFileSystemAdapter } from '@a24z/core-library';
-import { ProjectRegistryStore } from '@a24z/core-library';
-import { MemoryPalace } from '@a24z/core-library';
+import { CONFIG_FILENAME } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library';
+import { ProjectRegistryStore } from '@principal-ai/alexandria-core-library';
+import { MemoryPalace } from '@principal-ai/alexandria-core-library';
 import { getAlexandriaWorkflowTemplate } from '../templates/alexandria-workflow.js';
 import { getGitRemoteUrl } from '../utils/git.js';
-import { ALEXANDRIA_DIRS } from '@a24z/core-library';
+import { ALEXANDRIA_DIRS } from '@principal-ai/alexandria-core-library';
 import { execSync } from 'node:child_process';
 import { getAlexandriaHome } from '../utils/env.js';
 

@@ -4,7 +4,7 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import type { CodebaseViewFileCell } from '@a24z/core-library';
+import type { CodebaseViewFileCell } from '@principal-ai/alexandria-core-library';
 
 export interface ExtractedStructure {
   name: string;

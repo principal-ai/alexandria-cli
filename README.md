@@ -1,20 +1,20 @@
 # Alexandria CLI
 
-Unified Context Management CLI for the a24z ecosystem. This tool provides command-line access to manage codebase views, documentation, and project context using the Alexandria knowledge management system.
+Unified Context Management CLI for the Principal AI ecosystem. This tool provides command-line access to manage codebase views, documentation, and project context using the Alexandria knowledge management system.
 
 ## Installation
 
 ```bash
 # Using npm
-npm install -g @a24z/alexandria-cli
+npm install -g @principal-ai/alexandria-cli
 
 # Using bun
-bun add -g @a24z/alexandria-cli
+bun add -g @principal-ai/alexandria-cli
 ```
 
 ## Dependencies
 
-This CLI depends on the `@a24z/core-library` package which provides the core MemoryPalace functionality.
+This CLI depends on the `@principal-ai/alexandria-core-library` package which provides the core MemoryPalace functionality.
 
 ## Usage
 

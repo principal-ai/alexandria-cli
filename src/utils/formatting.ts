@@ -2,7 +2,10 @@
  * Formatting utilities for CLI output
  */
 
-import type { CodebaseValidationResult as ValidationResult, ValidationIssue } from '@a24z/core-library';
+import type {
+  CodebaseValidationResult as ValidationResult,
+  ValidationIssue,
+} from '@principal-ai/alexandria-core-library';
 
 /**
  * Format a validation result for terminal display

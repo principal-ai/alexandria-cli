@@ -6,13 +6,13 @@ import { Command } from 'commander';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { execSync } from 'node:child_process';
-import { CONFIG_FILENAME } from '@a24z/core-library';
+import { CONFIG_FILENAME } from '@principal-ai/alexandria-core-library';
 import { createMemoryPalace, getRepositoryRoot } from '../utils/repository.js';
-import { ALEXANDRIA_DIRS } from '@a24z/core-library';
-import { NodeFileSystemAdapter } from '@a24z/core-library';
-import { MemoryPalace } from '@a24z/core-library';
-import { ConfigValidator } from '@a24z/core-library';
-import { ConfigValidationResult as ValidationResult } from '@a24z/core-library';
+import { ALEXANDRIA_DIRS } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library';
+import { MemoryPalace } from '@principal-ai/alexandria-core-library';
+import { ConfigValidator } from '@principal-ai/alexandria-core-library';
+import { ConfigValidationResult as ValidationResult } from '@principal-ai/alexandria-core-library';
 
 interface ConfigData {
   version?: string;

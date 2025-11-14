@@ -4,7 +4,7 @@
 
 import { Command } from 'commander';
 import { getRepositoryRoot } from '../utils/repository.js';
-import { ALEXANDRIA_DIRS } from '@a24z/core-library';
+import { ALEXANDRIA_DIRS } from '@principal-ai/alexandria-core-library';
 import {
   findUntrackedDocuments,
   createViewsFromDocuments,

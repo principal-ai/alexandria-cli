@@ -7,7 +7,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { createMemoryPalace, getRepositoryRoot } from '../utils/repository.js';
 import { createViewFromDocument, type UntrackedDocumentInfo } from '../utils/viewCreation.js';
-import { ALEXANDRIA_DIRS } from '@a24z/core-library';
+import { ALEXANDRIA_DIRS } from '@principal-ai/alexandria-core-library';
 
 export function createAddDocCommand(): Command {
   const command = new Command('add-doc');

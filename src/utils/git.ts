@@ -3,7 +3,7 @@
  */
 
 import { execSync } from 'child_process';
-import type { ValidatedRepositoryPath } from '@a24z/core-library';
+import type { ValidatedRepositoryPath } from '@principal-ai/alexandria-core-library';
 
 /**
  * Get the git remote URL for a repository

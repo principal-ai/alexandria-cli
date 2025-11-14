@@ -1,10 +1,10 @@
 import { Command } from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
-import { NodeFileSystemAdapter } from '@a24z/core-library';
-import { ProjectRegistryStore } from '@a24z/core-library';
-import { MemoryPalace } from '@a24z/core-library';
-import { hasAlexandriaWorkflow, hasMemoryNotes } from '@a24z/core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library';
+import { ProjectRegistryStore } from '@principal-ai/alexandria-core-library';
+import { MemoryPalace } from '@principal-ai/alexandria-core-library';
+import { hasAlexandriaWorkflow, hasMemoryNotes } from '@principal-ai/alexandria-core-library';
 import { getGitRemoteUrl } from '../utils/git.js';
 import { getAlexandriaHome } from '../utils/env.js';
 
