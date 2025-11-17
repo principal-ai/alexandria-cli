@@ -3,9 +3,8 @@
  */
 
 import { MemoryPalace } from '@principal-ai/alexandria-core-library';
-import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library';
-import type { CodebaseView } from '@principal-ai/alexandria-core-library';
-import type { CodebaseValidationResult as ValidationResult } from '@principal-ai/alexandria-core-library';
+import type { CodebaseView, CodebaseValidationResult as ValidationResult } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
 
 export interface ViewValidationResult {
   viewId: string;

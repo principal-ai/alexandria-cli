@@ -7,9 +7,10 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 import { execSync } from 'node:child_process';
-import { MemoryPalace, NodeFileSystemAdapter } from '@a24z/core-library';
+import { MemoryPalace } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
 import { createListCommand } from '../../src/commands/list';
-import type { CodebaseView } from '@a24z/core-library';
+import type { CodebaseView } from '@principal-ai/alexandria-core-library';
 
 describe('CLI - list command', () => {
   let tempDir: string;

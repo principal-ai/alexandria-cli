@@ -6,10 +6,8 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { globby } from 'globby';
 import ignore from 'ignore';
-import { MemoryPalace } from '@principal-ai/alexandria-core-library';
-import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library';
-import { ALEXANDRIA_DIRS } from '@principal-ai/alexandria-core-library';
-import { generateViewIdFromName } from '@principal-ai/alexandria-core-library';
+import { MemoryPalace, ALEXANDRIA_DIRS, generateViewIdFromName } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
 import { extractStructureFromMarkdown } from './documentParser.js';
 import type { CodebaseView, ValidatedRepositoryPath } from '@principal-ai/alexandria-core-library';
 

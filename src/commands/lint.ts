@@ -1,12 +1,11 @@
 import { Command } from 'commander';
 import {
   LibraryRulesEngine,
-  NodeFileSystemAdapter,
-  NodeGlobAdapter,
   ConfigValidator,
   CONFIG_FILENAME,
   type LibraryRule,
 } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter, NodeGlobAdapter } from '@principal-ai/alexandria-core-library/node';
 import chalk from 'chalk';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -161,6 +160,15 @@ function getExampleConfigForRule(ruleId: string, rule: LibraryRule) {
           excludePatterns: ['**/*.test.ts', '**/*.spec.ts', '**/node_modules/**', '**/dist/**'],
           reportByDirectory: false,
           minimumDirectoryCoverage: 50,
+        };
+      }
+      break;
+    case 'minimum-references':
+      if (baseConfig.context.rules[0]) {
+        baseConfig.context.rules[0].options = {
+          minFiles: 3,
+          excludeCategories: ['planning', 'meta'],
+          excludeViews: [],
         };
       }
       break;

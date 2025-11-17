@@ -5,9 +5,6 @@
  * to the core library package for better code reuse.
  */
 
-export {
-  AlexandriaOutpostManager,
-  NodeFileSystemAdapter,
-  NodeGlobAdapter,
-} from '@principal-ai/alexandria-core-library';
+export { AlexandriaOutpostManager } from '@principal-ai/alexandria-core-library';
+export { NodeFileSystemAdapter, NodeGlobAdapter } from '@principal-ai/alexandria-core-library/node';
 export type { AlexandriaRepository } from '@principal-ai/alexandria-core-library';

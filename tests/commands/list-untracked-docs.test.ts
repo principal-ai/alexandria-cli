@@ -7,9 +7,10 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 import { execSync } from 'node:child_process';
-import { MemoryPalace, NodeFileSystemAdapter } from '@a24z/core-library';
+import { MemoryPalace } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
 import { createListUntrackedDocsCommand } from '../../src/commands/list-untracked-docs';
-import type { CodebaseView } from '@a24z/core-library';
+import type { CodebaseView } from '@principal-ai/alexandria-core-library';
 
 describe('CLI - list-untracked-docs command', () => {
   let tempDir: string;

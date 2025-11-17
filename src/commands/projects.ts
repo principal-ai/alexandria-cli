@@ -1,10 +1,13 @@
 import { Command } from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
-import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library';
-import { ProjectRegistryStore } from '@principal-ai/alexandria-core-library';
-import { MemoryPalace } from '@principal-ai/alexandria-core-library';
-import { hasAlexandriaWorkflow, hasMemoryNotes } from '@principal-ai/alexandria-core-library';
+import {
+  ProjectRegistryStore,
+  MemoryPalace,
+  hasAlexandriaWorkflow,
+  hasMemoryNotes,
+} from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
 import { getGitRemoteUrl } from '../utils/git.js';
 import { getAlexandriaHome } from '../utils/env.js';
 

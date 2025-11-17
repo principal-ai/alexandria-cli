@@ -5,7 +5,7 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { MemoryPalace } from '@principal-ai/alexandria-core-library';
-import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
 
 /**
  * Find the git repository root from a given path
