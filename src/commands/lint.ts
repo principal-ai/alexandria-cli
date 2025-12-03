@@ -166,7 +166,7 @@ function getExampleConfigForRule(ruleId: string, rule: LibraryRule) {
     case 'minimum-references':
       if (baseConfig.context.rules[0]) {
         baseConfig.context.rules[0].options = {
-          minFiles: 3,
+          minFiles: 1,
           excludeCategories: ['planning', 'meta'],
           excludeViews: [],
         };

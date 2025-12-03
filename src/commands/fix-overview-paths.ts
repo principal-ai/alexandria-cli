@@ -6,6 +6,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { createMemoryPalace, getRepositoryRoot } from '../utils/repository.js';
 import { OverviewPathAutoFix } from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
 
 export function createFixOverviewPathsCommand(): Command {
   const command = new Command('fix-overview-paths');
@@ -27,7 +28,8 @@ export function createFixOverviewPathsCommand(): Command {
         console.log(chalk.blue(`Analyzing CodebaseView overview paths in ${repoPath}...\n`));
 
         // Create auto-fix provider
-        const autoFix = new OverviewPathAutoFix(palace, {
+        const fsAdapter = new NodeFileSystemAdapter();
+        const autoFix = new OverviewPathAutoFix(palace, fsAdapter, {
           preferredOverviewDir: options.preferredDir,
           excludePatterns: options.exclude,
           createMissing: options.createMissing !== false,

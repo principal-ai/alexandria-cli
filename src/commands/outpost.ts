@@ -153,7 +153,7 @@ function createServeCommand() {
           // Create filesystem adapter and manager to check registered repositories
           const fsAdapter = new NodeFileSystemAdapter();
           const globAdapter = new NodeGlobAdapter();
-          const outpostManager = new AlexandriaOutpostManager(fsAdapter, globAdapter);
+          const outpostManager = new AlexandriaOutpostManager(fsAdapter, globAdapter, homedir());
 
           const projectCount = outpostManager.getRepositoryCount();
           console.log(chalk.dim(`   Found ${projectCount} registered repositories`));
