@@ -108,16 +108,16 @@ function getRepoUrl(repoPath: string): string | undefined {
       stdio: 'pipe',
     }).trim();
 
-    // Convert git URL to HTTPS URL for GitHub
+    // Convert git URL to web editor URL
     if (remoteUrl.startsWith('git@github.com:')) {
       const parts = remoteUrl.replace('git@github.com:', '').replace('.git', '').split('/');
       if (parts.length === 2) {
-        return `https://a24z-ai.github.io/Alexandria/repo/?owner=${parts[0]}&name=${parts[1]}`;
+        return `https://app.principal-ade.com/${parts[0]}/${parts[1]}`;
       }
     } else if (remoteUrl.includes('github.com')) {
       const match = remoteUrl.match(/github\.com[:/]([^/]+)\/([^/]+?)(\.git)?$/);
       if (match) {
-        return `https://a24z-ai.github.io/Alexandria/repo/?owner=${match[1]}&name=${match[2]}`;
+        return `https://app.principal-ade.com/${match[1]}/${match[2]}`;
       }
     }
 

@@ -85,7 +85,7 @@ AI assistants can query the Alexandria library to get structured context about:
 - How components interact
 - Architectural patterns and conventions
 
-The `src/api/AlexandriaOutpostManager.ts` provides an API server for programmatic access.
+The `alexandria open` command provides quick access to the web editor at `https://app.principal-ade.com`.
 
 ### Documentation Maintenance
 

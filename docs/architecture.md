@@ -19,11 +19,10 @@ alexandria-cli (this package)
 Key dependencies from `package.json`:
 
 - `commander@^14.0.0` - CLI framework
-- `@a24z/core-library@^0.1.10` - Core MemoryPalace functionality
-- `@a24z/markdown-utils@^0.1.2` - Markdown processing
-- `@a24z/alexandria-outpost@^0.1.7` - API server
+- `@principal-ai/alexandria-core-library` - Core MemoryPalace functionality
+- `@principal-ade/markdown-utils` - Markdown processing
 - `chalk@^5.6.0` - Terminal styling
-- `globby@^14.1.0` - File pattern matching
+- `globby@^16.0.0` - File pattern matching
 
 ## Project Structure
 
@@ -42,7 +41,7 @@ src/
 │   ├── agents.ts        # AGENTS.md management
 │   ├── hooks.ts         # Git hook management
 │   ├── projects.ts      # Project registry
-│   ├── outpost.ts       # API server management
+│   ├── open.ts          # Open web editor
 │   └── ... (more commands)
 ├── utils/                # Shared utilities
 │   ├── repository.ts    # Repository operations
@@ -52,8 +51,6 @@ src/
 │   ├── coverage.ts      # Coverage calculation
 │   ├── git.ts           # Git operations
 │   └── formatting.ts    # Output formatting
-├── api/                  # API server
-│   └── AlexandriaOutpostManager.ts # Outpost server management
 └── templates/            # Template files
     └── alexandria-workflow.ts # GitHub Actions template
 ```
@@ -181,22 +178,13 @@ The `src/utils/git.ts` provides git-related functionality:
 
 Used by `src/commands/init.ts` for project registration and `src/commands/install-workflow.ts` for GitHub Actions setup.
 
-### API Server (Outpost)
+### Web Editor Integration
 
-The `src/api/AlexandriaOutpostManager.ts` manages the Alexandria Outpost API server:
+The `src/commands/open.ts` provides quick access to the Alexandria web editor:
 
-- Start/stop server in background
-- Check server status
-- Manage server lifecycle
-- Provide HTTP API for programmatic access to CodebaseViews
-
-The outpost uses Express.js (configured in `@a24z/alexandria-outpost`) to serve:
-
-- REST endpoints for views
-- CORS-enabled API
-- Compression for performance
-
-Controlled via `src/commands/outpost.ts`.
+- Parses git remote URL to extract owner/repo
+- Opens browser to `https://app.principal-ade.com/{owner}/{repo}`
+- Supports `--no-browser` flag to print URL only
 
 ## Build Process
 

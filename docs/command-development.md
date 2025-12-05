@@ -159,12 +159,11 @@ Alexandria has several command categories:
 - Uses npm/bun to update package
 - Pattern: Shell execution
 
-**outpost** (`src/commands/outpost.ts`)
+**open** (`src/commands/open.ts`)
 
-- Manage Alexandria API server
-- Uses `src/api/AlexandriaOutpostManager.ts`
-- Subcommands: start, stop, status
-- Pattern: Process management
+- Open Alexandria web editor for current repository
+- Parses git remote to build URL
+- Pattern: Browser launch
 
 **install-workflow** (`src/commands/install-workflow.ts`)
 

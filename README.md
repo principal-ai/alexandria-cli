@@ -63,17 +63,14 @@ alexandria projects list
 alexandria coverage
 ```
 
-### API Outpost
+### Web Editor
 
 ```bash
-# Start the Alexandria API server
-alexandria outpost start
+# Open the Alexandria web editor for this repository
+alexandria open
 
-# Check server status
-alexandria outpost status
-
-# Stop the server
-alexandria outpost stop
+# Print URL without opening browser
+alexandria open --no-browser
 ```
 
 ## Development

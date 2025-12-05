@@ -25,7 +25,7 @@ import { createStatusCommand } from './commands/status.js';
 import { createAgentsCommand } from './commands/agents.js';
 import { createHooksCommand } from './commands/hooks.js';
 import { createCoverageCommand } from './commands/coverage.js';
-import { createOutpostCommand } from './commands/outpost.js';
+import { createOpenCommand } from './commands/open.js';
 import { createFixOverviewPathsCommand } from './commands/fix-overview-paths.js';
 import { createSchemaCommand } from './commands/schema.js';
 
@@ -56,7 +56,7 @@ program.addCommand(createProjectsCommand());
 program.addCommand(createListUntrackedDocsCommand());
 program.addCommand(createUpdateCommand());
 program.addCommand(createCoverageCommand());
-program.addCommand(createOutpostCommand());
+program.addCommand(createOpenCommand());
 program.addCommand(createFixOverviewPathsCommand());
 program.addCommand(createSchemaCommand());
 
