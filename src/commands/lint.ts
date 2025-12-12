@@ -192,6 +192,16 @@ export const lintCommand = new Command('lint')
     const globAdapter = new NodeGlobAdapter();
     const engine = new LibraryRulesEngine(fsAdapter, globAdapter);
 
+    // Find the repository root from the current directory
+    // This allows running lint from any subdirectory within a git repository
+    let repositoryRoot: string;
+    try {
+      repositoryRoot = fsAdapter.findProjectRoot(process.cwd());
+    } catch {
+      console.error(chalk.red('❌ Not in a git repository. Please run this command from within a git repository.'));
+      process.exit(1);
+    }
+
     // Handle --help-rule option
     if (options.helpRule) {
       console.log(chalk.blue(`📋 Alexandria Lint Rule: ${options.helpRule}\n`));
@@ -261,7 +271,7 @@ export const lintCommand = new Command('lint')
     console.log(chalk.blue('🔍 Linting Alexandria library...\n'));
 
     // Check and validate .alexandriarc.json if it exists
-    const configPath = path.join(process.cwd(), CONFIG_FILENAME);
+    const configPath = path.join(repositoryRoot, CONFIG_FILENAME);
     if (fs.existsSync(configPath)) {
       try {
         const configContent = fs.readFileSync(configPath, 'utf8');
@@ -318,7 +328,7 @@ export const lintCommand = new Command('lint')
     console.log(chalk.blue('📋 Validating CodebaseViews...\n'));
     let viewValidationSummary;
     try {
-      viewValidationSummary = validateAllViews(process.cwd());
+      viewValidationSummary = validateAllViews(repositoryRoot);
 
       if (viewValidationSummary.totalViews === 0) {
         console.log(chalk.dim('   No CodebaseViews found to validate.\n'));
@@ -355,7 +365,7 @@ export const lintCommand = new Command('lint')
       // Continue with linting even if view validation fails
     }
 
-    const result = await engine.lint(process.cwd(), {
+    const result = await engine.lint(repositoryRoot, {
       enabledRules: options.enable,
       disabledRules: options.disable,
       fix: options.fix,
