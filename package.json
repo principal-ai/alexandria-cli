@@ -38,7 +38,7 @@
     "principal-ai"
   ],
   "author": "Principal AI Team",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/principal-ai/alexandria-cli/issues"
   },
@@ -94,6 +94,7 @@
     "templates",
     "schema",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "PATENTS.md"
   ]
 }
