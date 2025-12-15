@@ -178,11 +178,11 @@ function getExampleConfigForRule(ruleId: string, rule: LibraryRule) {
 }
 
 export const lintCommand = new Command('lint')
-  .description('Lint your Alexandria library for context quality issues')
-  .option('--fix', 'Automatically fix fixable violations')
+  .description('Check documentation quality goals for your Alexandria library')
+  .option('--fix', 'Automatically fix goals that can be auto-resolved')
   .option('--json', 'Output results as JSON')
-  .option('--quiet', 'Only show errors')
-  .option('--errors-only', 'Exit with error code only if there are errors (not warnings)')
+  .option('--quiet', 'Minimal output (hide rule details)')
+  .option('--errors-only', 'Only show required goals (hide recommended goals)')
   .option('--enable <rules...>', 'Enable specific rules')
   .option('--disable <rules...>', 'Disable specific rules')
   .option('--list-rules', 'List all available lint rules and their configurations')
@@ -268,7 +268,13 @@ export const lintCommand = new Command('lint')
       process.exit(0);
     }
 
-    console.log(chalk.blue('🔍 Linting Alexandria library...\n'));
+    console.log(chalk.blue('🎯 Checking Documentation Goals...\n'));
+    console.log(
+      chalk.dim(
+        '   These checks represent documentation quality GOALS for your project.\n' +
+          '   Errors (✖) are REQUIRED fixes. Warnings (⚠) are RECOMMENDED goals.\n',
+      ),
+    );
 
     // Check and validate .alexandriarc.json if it exists
     const configPath = path.join(repositoryRoot, CONFIG_FILENAME);
@@ -407,9 +413,9 @@ export const lintCommand = new Command('lint')
 
     if (displayViolations.length === 0) {
       if (options.errorsOnly && violations.length > 0) {
-        console.log(chalk.green('✨ No errors found! (warnings and info suppressed)'));
+        console.log(chalk.green('✨ All required goals met! (recommended goals suppressed)'));
       } else {
-        console.log(chalk.green('✨ No issues found!'));
+        console.log(chalk.green('✨ All documentation goals achieved!'));
       }
       process.exit(0);
     }
@@ -424,54 +430,56 @@ export const lintCommand = new Command('lint')
       violationsByFile.get(file)!.push(violation);
     }
 
-    // Display violations
+    // Display violations as documentation goals
     for (const [file, fileViolations] of violationsByFile) {
       console.log(chalk.underline(file));
 
       for (const violation of fileViolations) {
-        const icon = violation.severity === 'error' ? '✖' : violation.severity === 'warning' ? '⚠' : 'ℹ';
-        const color =
-          violation.severity === 'error' ? chalk.red : violation.severity === 'warning' ? chalk.yellow : chalk.blue;
+        // Use goal-oriented labels instead of generic icons
+        const label =
+          violation.severity === 'error'
+            ? chalk.red('✖ REQUIRED:')
+            : violation.severity === 'warning'
+              ? chalk.yellow('⚠ GOAL:')
+              : chalk.blue('ℹ TIP:');
 
         // Include line number if available
         const location = violation.line ? chalk.gray(`  ${violation.line}:1`) : '  ';
 
-        console.log(`${location}  ${color(icon)} ${violation.message}`);
+        console.log(`${location}  ${label} ${violation.message}`);
         if (!options.quiet) {
           console.log(chalk.gray(`      rule: ${violation.ruleId}`));
-          console.log(chalk.gray(`      impact: ${violation.impact}`));
+          console.log(chalk.gray(`      why: ${violation.impact}`));
         }
       }
       console.log();
     }
 
-    // Summary
+    // Summary - using goal-oriented language
     const parts = [];
     const displayedErrors = options.errorsOnly ? errorCount : errorCount;
     const displayedWarnings = options.errorsOnly ? 0 : warningCount;
     const displayedInfo = options.errorsOnly ? 0 : infoCount;
 
     if (displayedErrors > 0) {
-      parts.push(chalk.red(`${displayedErrors} error${displayedErrors !== 1 ? 's' : ''}`));
+      parts.push(chalk.red(`${displayedErrors} required`));
     }
     if (displayedWarnings > 0) {
-      parts.push(chalk.yellow(`${displayedWarnings} warning${displayedWarnings !== 1 ? 's' : ''}`));
+      parts.push(chalk.yellow(`${displayedWarnings} recommended`));
     }
     if (displayedInfo > 0 && !options.quiet) {
-      parts.push(chalk.blue(`${displayedInfo} info`));
+      parts.push(chalk.blue(`${displayedInfo} tip${displayedInfo !== 1 ? 's' : ''}`));
     }
 
     console.log(
       chalk.bold(
-        `✖ ${displayViolations.length} problem${displayViolations.length !== 1 ? 's' : ''} (${parts.join(', ')})`,
+        `🎯 ${displayViolations.length} documentation goal${displayViolations.length !== 1 ? 's' : ''} to achieve (${parts.join(', ')})`,
       ),
     );
 
     if (fixableCount > 0 && !options.fix) {
       console.log(
-        chalk.dim(
-          `\n${fixableCount} error${fixableCount !== 1 ? 's' : ''} and warning${fixableCount !== 1 ? 's' : ''} potentially fixable with --fix`,
-        ),
+        chalk.dim(`\n${fixableCount} goal${fixableCount !== 1 ? 's' : ''} can be automatically fixed with --fix`),
       );
     }
 

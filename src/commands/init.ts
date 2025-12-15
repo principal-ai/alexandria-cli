@@ -53,7 +53,18 @@ export function createInitCommand(): Command {
         const repoPath = process.cwd();
         const configPath = path.join(repoPath, CONFIG_FILENAME);
 
-        console.log('🚀 Initializing Alexandria...\n');
+        // Welcome message explaining what Alexandria does
+        console.log('┌────────────────────────────────────────────────────────────┐');
+        console.log('│  🏛️  Alexandria - Documentation Quality for AI Agents      │');
+        console.log('└────────────────────────────────────────────────────────────┘\n');
+        console.log(
+          '  Alexandria helps you maintain high-quality documentation that\n' +
+            '  AI assistants can effectively use to understand your codebase.\n',
+        );
+        console.log('  Key concepts:');
+        console.log('  • CodebaseViews link documentation to source files');
+        console.log('  • Lint rules define documentation GOALS (not just suggestions)');
+        console.log('  • Location-bound files (README.md, etc.) stay where they are\n');
 
         // Check if config already exists
         if (fs.existsSync(configPath) && !options.force) {
@@ -61,6 +72,14 @@ export function createInitCommand(): Command {
           console.error('   Use --force to overwrite');
           process.exit(1);
         }
+
+        // Step 1: Create config
+        console.log('─── Step 1: Creating Configuration ───────────────────────────\n');
+        console.log(
+          '  The config file defines your documentation quality GOALS.\n' +
+            '  When you run "alexandria lint", these goals are checked.\n' +
+            '  Treat lint output as objectives to achieve, not optional warnings.\n',
+        );
 
         // Create minimal config
         const config = {
@@ -77,16 +96,22 @@ export function createInitCommand(): Command {
         // Write config file
         fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + '\n', 'utf8');
 
-        console.log(`✅ Created ${CONFIG_FILENAME}`);
-        console.log(`📝 Using .gitignore patterns + ${ALEXANDRIA_DIRS.PRIMARY}/ exclusions\n`);
+        console.log(`  ✅ Created ${CONFIG_FILENAME}`);
+        console.log(`     Using .gitignore patterns + ${ALEXANDRIA_DIRS.PRIMARY}/ exclusions\n`);
 
-        // Setup global registry if not opted out
+        // Step 2: Global registry
+        console.log('─── Step 2: Project Registry ─────────────────────────────────\n');
+        console.log(
+          '  The global registry tracks all your Alexandria-enabled projects,\n' +
+            '  allowing cross-project documentation discovery.\n',
+        );
+
         if (options.register !== false) {
           const fsAdapter = new NodeFileSystemAdapter();
           const homeDir = getAlexandriaHome();
 
           if (!homeDir) {
-            console.warn('⚠️  Could not determine home directory for global registry');
+            console.warn('  ⚠️  Could not determine home directory for global registry');
           } else {
             try {
               // Validate it's a git repository
@@ -105,36 +130,40 @@ export function createInitCommand(): Command {
               const existing = registry.getProject(projectName);
               if (!existing) {
                 registry.registerProject(projectName, validatedPath, remoteUrl);
-                console.log(`✅ Registered project '${projectName}' in global registry`);
+                console.log(`  ✅ Registered project '${projectName}' in global registry`);
                 if (remoteUrl) {
-                  console.log(`   Remote: ${remoteUrl}`);
+                  console.log(`     Remote: ${remoteUrl}`);
                 }
               } else {
-                console.log(`ℹ️  Project '${projectName}' already registered`);
+                console.log(`  ℹ️  Project '${projectName}' already registered`);
               }
             } catch (error) {
               // If not a git repo, just skip registration
               if (error instanceof Error && error.message.includes('git')) {
-                console.log('ℹ️  Skipping global registry (not a git repository)');
+                console.log('  ℹ️  Skipping global registry (not a git repository)');
               } else {
                 console.warn(
-                  `⚠️  Could not register in global registry: ${error instanceof Error ? error.message : error}`,
+                  `  ⚠️  Could not register in global registry: ${error instanceof Error ? error.message : error}`,
                 );
               }
             }
           }
+        } else {
+          console.log('  ⏭️  Skipped (--no-register)\n');
         }
 
-        // Ask about AGENTS.md if not opted out
+        // Step 3: AGENTS.md
+        console.log('\n─── Step 3: AI Agent Guidance (AGENTS.md) ────────────────────\n');
+        console.log(
+          '  AGENTS.md teaches AI assistants how to use Alexandria commands.\n' +
+            '  This is a location-bound file and will stay at the repository root.\n',
+        );
+
         const nonInteractive = options.yes || options.nonInteractive;
         if (options.agents !== false) {
-          console.log('');
           const installAgents = nonInteractive
             ? true
-            : await promptYesNo(
-                '📚 Would you like to add Alexandria guidance to AGENTS.md?\n   This helps AI assistants understand Alexandria commands',
-                true,
-              );
+            : await promptYesNo('  Would you like to add Alexandria guidance to AGENTS.md?', true);
 
           if (installAgents) {
             try {
@@ -156,34 +185,38 @@ export function createInitCommand(): Command {
                   cwd: repoPath,
                   stdio: 'pipe',
                 });
-                console.log('✅ Created AGENTS.md with Alexandria guidance');
+                console.log('  ✅ Created AGENTS.md with Alexandria guidance');
               } else if (!hasAlexandriaSection) {
                 // Add Alexandria section to existing AGENTS.md
                 execSync('npx alexandria agents --add', {
                   cwd: repoPath,
                   stdio: 'pipe',
                 });
-                console.log('✅ Added Alexandria guidance to AGENTS.md');
+                console.log('  ✅ Added Alexandria guidance to AGENTS.md');
               } else {
-                console.log('ℹ️  AGENTS.md already contains Alexandria guidance');
+                console.log('  ℹ️  AGENTS.md already contains Alexandria guidance');
               }
             } catch (error) {
               console.warn(
-                `⚠️  Could not add Alexandria guidance to AGENTS.md: ${error instanceof Error ? error.message : error}`,
+                `  ⚠️  Could not add Alexandria guidance to AGENTS.md: ${error instanceof Error ? error.message : error}`,
               );
             }
           }
+        } else {
+          console.log('  ⏭️  Skipped (--no-agents)\n');
         }
 
-        // Ask about husky hooks if not opted out
+        // Step 4: Pre-commit hooks
+        console.log('\n─── Step 4: Pre-commit Validation (Optional) ──────────────────\n');
+        console.log(
+          '  Pre-commit hooks validate CodebaseViews before each commit,\n' +
+            '  ensuring documentation stays in sync with code changes.\n',
+        );
+
         if (options.hooks !== false && fs.existsSync(path.join(repoPath, '.git'))) {
-          console.log('');
           const installHooks = nonInteractive
             ? true
-            : await promptYesNo(
-                '🪝 Would you like to set up husky pre-commit hooks?\n   This will validate Alexandria views before each commit',
-                true,
-              );
+            : await promptYesNo('  Would you like to set up pre-commit validation?', true);
 
           if (installHooks) {
             try {
@@ -193,7 +226,7 @@ export function createInitCommand(): Command {
 
               if (!hasHusky) {
                 // Initialize husky
-                console.log('📦 Installing husky...');
+                console.log('  📦 Installing husky...');
                 execSync('npm install --save-dev husky', {
                   cwd: repoPath,
                   stdio: 'inherit',
@@ -209,22 +242,27 @@ export function createInitCommand(): Command {
                 cwd: repoPath,
                 stdio: 'pipe',
               });
-              console.log('✅ Added Alexandria validation to pre-commit hooks');
+              console.log('  ✅ Added Alexandria validation to pre-commit hooks');
             } catch (error) {
-              console.warn(`⚠️  Could not set up husky hooks: ${error instanceof Error ? error.message : error}`);
+              console.warn(`  ⚠️  Could not set up husky hooks: ${error instanceof Error ? error.message : error}`);
             }
           }
+        } else if (options.hooks === false) {
+          console.log('  ⏭️  Skipped (--no-hooks)\n');
+        } else {
+          console.log('  ⏭️  Skipped (not a git repository)\n');
         }
 
-        // Ask about GitHub workflow if not opted out
+        // Step 5: GitHub workflow
+        console.log('\n─── Step 5: GitHub Actions (Optional) ────────────────────────\n');
+        console.log(
+          '  A GitHub workflow can auto-register your project and validate\n' + '  documentation on every push.\n',
+        );
+
         if (options.workflow !== false && fs.existsSync(path.join(repoPath, '.git'))) {
-          console.log('');
           const installWorkflow = nonInteractive
             ? true
-            : await promptYesNo(
-                '📦 Would you like to install the GitHub Action workflow?\n   This will auto-register your project when pushed to GitHub',
-                true,
-              );
+            : await promptYesNo('  Would you like to install the GitHub Action workflow?', true);
 
           if (installWorkflow) {
             // Get the workflow template
@@ -242,24 +280,36 @@ export function createInitCommand(): Command {
             if (fs.existsSync(workflowPath)) {
               const overwrite = nonInteractive
                 ? false
-                : await promptYesNo('   Workflow already exists. Overwrite?', false);
+                : await promptYesNo('     Workflow already exists. Overwrite?', false);
               if (!overwrite) {
-                console.log('   Skipped workflow installation');
+                console.log('     Skipped workflow installation');
               } else {
                 fs.writeFileSync(workflowPath, workflowTemplate, 'utf8');
-                console.log(`✅ Updated GitHub workflow at .github/workflows/alexandria.yml`);
+                console.log(`  ✅ Updated GitHub workflow at .github/workflows/alexandria.yml`);
               }
             } else {
               fs.writeFileSync(workflowPath, workflowTemplate, 'utf8');
-              console.log(`✅ Created GitHub workflow at .github/workflows/alexandria.yml`);
+              console.log(`  ✅ Created GitHub workflow at .github/workflows/alexandria.yml`);
             }
           }
+        } else if (options.workflow === false) {
+          console.log('  ⏭️  Skipped (--no-workflow)\n');
+        } else {
+          console.log('  ⏭️  Skipped (not a git repository)\n');
         }
 
-        console.log('\n✨ Alexandria initialized successfully!');
-        console.log('\nNext steps:');
-        console.log('  1. Run: alexandria list');
-        console.log('  2. Add docs to library: alexandria add-doc <path>');
+        // Final summary
+        console.log('\n┌────────────────────────────────────────────────────────────┐');
+        console.log('│  ✨ Alexandria initialized successfully!                    │');
+        console.log('└────────────────────────────────────────────────────────────┘\n');
+
+        console.log('  📋 Next steps:\n');
+        console.log('     1. Run "alexandria lint" to see your documentation GOALS');
+        console.log('        (Remember: these are objectives to achieve, not just warnings)\n');
+        console.log('     2. Add documentation to your library:');
+        console.log('        alexandria add-doc <path-to-markdown-file>\n');
+        console.log('     3. View your library:');
+        console.log('        alexandria list\n');
 
         const hasWorkflow = fs.existsSync(path.join(repoPath, '.github', 'workflows', 'alexandria.yml'));
         const hasHooks =
@@ -267,14 +317,18 @@ export function createInitCommand(): Command {
           fs.readFileSync(path.join(repoPath, '.husky', 'pre-commit'), 'utf8').includes('alexandria');
 
         if (hasWorkflow || hasHooks) {
-          console.log('  3. Commit your changes to:');
+          console.log('     4. Commit your changes to activate:');
           if (hasWorkflow) {
-            console.log('     • Activate GitHub workflow');
+            console.log('        • GitHub workflow for CI validation');
           }
           if (hasHooks) {
-            console.log('     • Enable pre-commit validation');
+            console.log('        • Pre-commit hooks for local validation');
           }
+          console.log('');
         }
+
+        console.log('  💡 Tip: README.md and other location-bound files will NOT be');
+        console.log('     suggested for relocation - they stay where they belong.\n');
       } catch (error) {
         console.error('Error:', error instanceof Error ? error.message : String(error));
         process.exit(1);
