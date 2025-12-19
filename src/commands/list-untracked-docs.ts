@@ -7,7 +7,13 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { globby } from 'globby';
 import ignore from 'ignore';
-import { createMemoryPalace, getRepositoryRoot } from '../utils/repository.js';
+import {
+  createMemoryPalace,
+  getRepositoryRoot,
+  loadConfig,
+  getExcludePatterns,
+  filterByExcludePatterns,
+} from '../utils/repository.js';
 import { ALEXANDRIA_DIRS } from '@principal-ai/alexandria-core-library';
 
 export function createListUntrackedDocsCommand(): Command {
@@ -22,6 +28,10 @@ export function createListUntrackedDocsCommand(): Command {
       try {
         const palace = createMemoryPalace(options.path);
         const repoPath = getRepositoryRoot(options.path);
+
+        // Load config and get exclude patterns
+        const config = loadConfig(repoPath);
+        const excludePatterns = getExcludePatterns(config);
 
         // Load gitignore
         const gitignorePath = path.join(repoPath, '.gitignore');
@@ -45,6 +55,9 @@ export function createListUntrackedDocsCommand(): Command {
         // Filter out files in alexandria directory
         const nonAlexandriaFiles = gitFilteredFiles.filter((file) => !file.startsWith(`${ALEXANDRIA_DIRS.PRIMARY}/`));
 
+        // Apply exclude patterns from config
+        const configFilteredFiles = filterByExcludePatterns(nonAlexandriaFiles, excludePatterns);
+
         // Get all views and collect their overview paths
         const views = palace.listViews();
         const overviewPaths = new Set<string>();
@@ -58,7 +71,7 @@ export function createListUntrackedDocsCommand(): Command {
         });
 
         // Filter out files that are part of CodebaseViews
-        const untrackedFiles = nonAlexandriaFiles.filter((file) => !overviewPaths.has(file));
+        const untrackedFiles = configFilteredFiles.filter((file) => !overviewPaths.has(file));
 
         // Sort files by directory for better organization
         untrackedFiles.sort((a, b) => {
@@ -74,7 +87,7 @@ export function createListUntrackedDocsCommand(): Command {
         if (options.json) {
           const jsonOutput = {
             total: untrackedFiles.length,
-            totalMarkdownFiles: nonAlexandriaFiles.length,
+            totalMarkdownFiles: configFilteredFiles.length,
             filesInViews: overviewPaths.size,
             untrackedFiles: untrackedFiles,
             byDirectory: {} as Record<string, string[]>,
@@ -98,7 +111,7 @@ export function createListUntrackedDocsCommand(): Command {
           console.log('No untracked markdown documents found.');
           if (options.verbose) {
             console.log(`\nSummary:`);
-            console.log(`  Total markdown files found: ${nonAlexandriaFiles.length}`);
+            console.log(`  Total markdown files found: ${configFilteredFiles.length}`);
             console.log(`  Files in CodebaseViews: ${overviewPaths.size}`);
             console.log(`  Untracked markdown files: 0`);
           }
@@ -130,7 +143,7 @@ export function createListUntrackedDocsCommand(): Command {
 
         if (options.verbose) {
           console.log(`\nSummary:`);
-          console.log(`  Total markdown files found: ${nonAlexandriaFiles.length}`);
+          console.log(`  Total markdown files found: ${configFilteredFiles.length}`);
           console.log(`  Files in CodebaseViews: ${overviewPaths.size}`);
           console.log(`  Untracked markdown files: ${untrackedFiles.length}`);
         }

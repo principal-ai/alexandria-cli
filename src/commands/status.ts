@@ -14,7 +14,7 @@ import {
   ConfigValidationResult as ValidationResult,
 } from '@principal-ai/alexandria-core-library';
 import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
-import { createMemoryPalace, getRepositoryRoot } from '../utils/repository.js';
+import { createMemoryPalace, getRepositoryRoot, isExcluded } from '../utils/repository.js';
 
 interface ConfigData {
   version?: string;
@@ -127,7 +127,7 @@ function getRepoUrl(repoPath: string): string | undefined {
   }
 }
 
-function getUntrackedDocs(repoPath: string): string[] {
+function getUntrackedDocs(repoPath: string, excludePatterns: string[] = []): string[] {
   const fsAdapter = new NodeFileSystemAdapter();
   const palace = new MemoryPalace(repoPath, fsAdapter);
 
@@ -144,10 +144,16 @@ function getUntrackedDocs(repoPath: string): string[] {
       if (entry.isDirectory()) {
         // Skip common directories that shouldn't be tracked
         if (!['node_modules', '.git', ALEXANDRIA_DIRS.PRIMARY, 'dist', 'build'].includes(entry.name)) {
-          findMarkdownFiles(fullPath, relativePath);
+          // Also skip directories that match exclude patterns
+          if (!isExcluded(relativePath, excludePatterns) && !isExcluded(relativePath + '/', excludePatterns)) {
+            findMarkdownFiles(fullPath, relativePath);
+          }
         }
       } else if (entry.isFile() && entry.name.endsWith('.md')) {
-        allDocs.push(relativePath);
+        // Skip files that match exclude patterns
+        if (!isExcluded(relativePath, excludePatterns)) {
+          allDocs.push(relativePath);
+        }
       }
     }
   }
@@ -245,8 +251,9 @@ export function createStatusCommand(): Command {
         const views = palace.listViews();
         status.viewsCount = views.length;
 
-        // Get untracked docs
-        const untrackedDocs = getUntrackedDocs(repoPath);
+        // Get untracked docs (applying exclude patterns from config)
+        const excludePatterns = status.config?.context?.patterns?.exclude ?? [];
+        const untrackedDocs = getUntrackedDocs(repoPath, excludePatterns);
         status.untrackedDocsCount = untrackedDocs.length;
         status.untrackedDocs = untrackedDocs;
 

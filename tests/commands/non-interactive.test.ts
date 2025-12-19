@@ -127,7 +127,7 @@ describe('CLI - non-interactive mode', () => {
     expect(fullOutput).toContain('Press Enter to continue');
   });
 
-  it('should accept all defaults in init command with --yes flag', async () => {
+  it('should run init command non-interactively by default', async () => {
     // Capture console output
     const originalLog = console.log;
     const originalError = console.error;
@@ -136,10 +136,10 @@ describe('CLI - non-interactive mode', () => {
     console.log = (...args) => output.push(args.join(' '));
     console.error = (...args) => errors.push(args.join(' '));
 
-    // Create and execute the command with --yes flag
+    // Create and execute the command
     const command = createInitCommand();
     // Use --no-agents, --no-hooks, --no-workflow to avoid external dependencies
-    await command.parseAsync(['node', 'test', '--yes', '--no-agents', '--no-hooks', '--no-workflow']);
+    await command.parseAsync(['node', 'test', '--no-agents', '--no-hooks', '--no-workflow']);
 
     // Restore console functions
     console.log = originalLog;

@@ -4,8 +4,59 @@
 
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { MemoryPalace } from '@principal-ai/alexandria-core-library';
+import { MemoryPalace, CONFIG_FILENAME } from '@principal-ai/alexandria-core-library';
 import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
+import { minimatch } from 'minimatch';
+
+export interface AlexandriaConfig {
+  version?: string;
+  context?: {
+    useGitignore?: boolean;
+    patterns?: {
+      exclude?: string[];
+    };
+  };
+}
+
+/**
+ * Load the Alexandria config from the repository
+ */
+export function loadConfig(repoPath: string): AlexandriaConfig | null {
+  const configPath = path.join(repoPath, CONFIG_FILENAME);
+  if (!fs.existsSync(configPath)) {
+    return null;
+  }
+  try {
+    const content = fs.readFileSync(configPath, 'utf8');
+    return JSON.parse(content) as AlexandriaConfig;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Get exclude patterns from the config
+ */
+export function getExcludePatterns(config: AlexandriaConfig | null): string[] {
+  return config?.context?.patterns?.exclude ?? [];
+}
+
+/**
+ * Check if a file path matches any of the exclude patterns
+ */
+export function isExcluded(filePath: string, excludePatterns: string[]): boolean {
+  return excludePatterns.some((pattern) => minimatch(filePath, pattern, { dot: true }));
+}
+
+/**
+ * Filter files by exclude patterns from config
+ */
+export function filterByExcludePatterns(files: string[], excludePatterns: string[]): string[] {
+  if (excludePatterns.length === 0) {
+    return files;
+  }
+  return files.filter((file) => !isExcluded(file, excludePatterns));
+}
 
 /**
  * Find the git repository root from a given path
