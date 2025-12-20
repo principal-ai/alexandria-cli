@@ -4,58 +4,50 @@
 
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { MemoryPalace, CONFIG_FILENAME } from '@principal-ai/alexandria-core-library';
-import { NodeFileSystemAdapter } from '@principal-ai/alexandria-core-library/node';
-import { minimatch } from 'minimatch';
+import {
+  MemoryPalace,
+  ConfigLoader,
+  filterByExcludePatterns as coreFilterByExcludePatterns,
+  matchesPatterns,
+} from '@principal-ai/alexandria-core-library';
+import { NodeFileSystemAdapter, NodeGlobAdapter } from '@principal-ai/alexandria-core-library/node';
+import type { AlexandriaConfig, GlobAdapter } from '@principal-ai/alexandria-core-library';
 
-export interface AlexandriaConfig {
-  version?: string;
-  context?: {
-    useGitignore?: boolean;
-    patterns?: {
-      exclude?: string[];
-    };
-  };
+// Re-export core library utilities for convenience
+export { getExcludePatterns } from '@principal-ai/alexandria-core-library';
+export type { AlexandriaConfig };
+
+// Singleton glob adapter for pattern matching
+let _globAdapter: GlobAdapter | undefined;
+
+function getGlobAdapter(): GlobAdapter {
+  if (!_globAdapter) {
+    _globAdapter = new NodeGlobAdapter();
+  }
+  return _globAdapter;
 }
 
 /**
- * Load the Alexandria config from the repository
+ * Load the Alexandria config from the repository using ConfigLoader
  */
 export function loadConfig(repoPath: string): AlexandriaConfig | null {
-  const configPath = path.join(repoPath, CONFIG_FILENAME);
-  if (!fs.existsSync(configPath)) {
-    return null;
-  }
-  try {
-    const content = fs.readFileSync(configPath, 'utf8');
-    return JSON.parse(content) as AlexandriaConfig;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Get exclude patterns from the config
- */
-export function getExcludePatterns(config: AlexandriaConfig | null): string[] {
-  return config?.context?.patterns?.exclude ?? [];
+  const fsAdapter = new NodeFileSystemAdapter();
+  const loader = new ConfigLoader(fsAdapter);
+  return loader.loadConfig(repoPath);
 }
 
 /**
  * Check if a file path matches any of the exclude patterns
  */
 export function isExcluded(filePath: string, excludePatterns: string[]): boolean {
-  return excludePatterns.some((pattern) => minimatch(filePath, pattern, { dot: true }));
+  return matchesPatterns(getGlobAdapter(), excludePatterns, filePath);
 }
 
 /**
  * Filter files by exclude patterns from config
  */
 export function filterByExcludePatterns(files: string[], excludePatterns: string[]): string[] {
-  if (excludePatterns.length === 0) {
-    return files;
-  }
-  return files.filter((file) => !isExcluded(file, excludePatterns));
+  return coreFilterByExcludePatterns(getGlobAdapter(), files, excludePatterns);
 }
 
 /**
