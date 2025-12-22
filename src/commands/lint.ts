@@ -179,7 +179,6 @@ function getExampleConfigForRule(ruleId: string, rule: LibraryRule) {
 
 export const lintCommand = new Command('lint')
   .description('Check documentation quality goals for your Alexandria library')
-  .option('--fix', 'Automatically fix goals that can be auto-resolved')
   .option('--json', 'Output results as JSON')
   .option('--quiet', 'Minimal output (hide rule details)')
   .option('--errors-only', 'Only show required goals (hide recommended goals)')
@@ -224,7 +223,6 @@ export const lintCommand = new Command('lint')
       console.log(`  ${chalk.gray('Severity:')} ${rule.severity}`);
       console.log(`  ${chalk.gray('Category:')} ${rule.category}`);
       console.log(`  ${chalk.gray('Impact:')} ${rule.impact}`);
-      console.log(`  ${chalk.gray('Fixable:')} ${rule.fixable ? chalk.green('Yes') : chalk.red('No')}`);
       console.log(`  ${chalk.gray('Enabled by default:')} ${rule.enabled ? chalk.green('Yes') : chalk.red('No')}\n`);
 
       // Show configuration example
@@ -248,10 +246,6 @@ export const lintCommand = new Command('lint')
         console.log(`  ${chalk.gray('Description:')} ${rule.description}`);
         console.log(`  ${chalk.gray('Default Severity:')} ${rule.severity}`);
         console.log(`  ${chalk.gray('Impact:')} ${rule.impact}`);
-
-        if (rule.fixable) {
-          console.log(`  ${chalk.gray('Fixable:')} ${chalk.green('Yes')}`);
-        }
 
         console.log();
       }
@@ -374,7 +368,6 @@ export const lintCommand = new Command('lint')
     const result = await engine.lint(repositoryRoot, {
       enabledRules: options.enable,
       disabledRules: options.disable,
-      fix: options.fix,
     });
 
     if (options.json) {
@@ -406,7 +399,7 @@ export const lintCommand = new Command('lint')
     }
 
     // Format output similar to ESLint
-    const { violations, errorCount, warningCount, infoCount, fixableCount } = result;
+    const { violations, errorCount, warningCount, infoCount } = result;
 
     // Filter violations based on --errors-only flag
     const displayViolations = options.errorsOnly ? violations.filter((v) => v.severity === 'error') : violations;
@@ -476,12 +469,6 @@ export const lintCommand = new Command('lint')
         `🎯 ${displayViolations.length} documentation goal${displayViolations.length !== 1 ? 's' : ''} to achieve (${parts.join(', ')})`,
       ),
     );
-
-    if (fixableCount > 0 && !options.fix) {
-      console.log(
-        chalk.dim(`\n${fixableCount} goal${fixableCount !== 1 ? 's' : ''} can be automatically fixed with --fix`),
-      );
-    }
 
     // Determine exit code based on options (include view validation errors)
     const hasViewErrors = viewValidationSummary && viewValidationSummary.invalidViews > 0;
